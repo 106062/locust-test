@@ -1,4 +1,5 @@
 import time
+import random
 from locust import HttpUser, task, between
 
 class QuickstartUser(HttpUser):
@@ -10,7 +11,10 @@ class QuickstartUser(HttpUser):
 
     @task
     def post_num(self):
-        with self.client.post("/numof2", json = { "num1" : "1", "num2" : "3" }, 
+        a = random.randint(0, 9);
+        b = random.randint(0, 9);
+        res = ((a + b) % 2);
+        with self.client.post("/numof2", json = { "num1" : a, "num2" : b }, 
                               catch_response = True ) as response:
-            if response.json() ["Result"] != "0":
+            if response.json() ["Result"] != str(res):
                 response.failure("Error");
